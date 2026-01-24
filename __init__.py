@@ -1,2 +1,4 @@
-self.map_tool = QgsMapToolEmitPoint(self.iface.mapCanvas())
-self.map_tool.canvasClicked.connect(self.handle_click)
+def classFactory(iface):
+    from .coordinate_formatter import CoordinateFormatter
+    return CoordinateFormatter(iface)
+
