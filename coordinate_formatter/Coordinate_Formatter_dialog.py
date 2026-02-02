@@ -26,19 +26,62 @@ import os
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
+from qgis.PyQt.QtWidgets import QDialog
+from qgis.core import (
+    QgsCoordinateReferenceSystem,
+    QgsCoordinateTransform,
+    QgsProject
+)
 
-# This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
-FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'Coordinate_Formatter_dialog_base.ui'))
+from .Coordinate_Formatter_dialog_base import Ui_CoordinateFormatterDialog
 
 
-class CoordinateFormatingDialog(QtWidgets.QDialog, FORM_CLASS):
-    def __init__(self, parent=None):
-        """Constructor."""
-        super(CoordinateFormatingDialog, self).__init__(parent)
-        # Set up the user interface from Designer through FORM_CLASS.
-        # After self.setupUi() you can access any designer object by doing
-        # self.<objectname>, and you can use autoconnect slots - see
-        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
-        # #widgets-and-dialogs-with-auto-connect
+class CoordinateFormatterDialog(QDialog, Ui_CoordinateFormatterDialog):
+    def __init__(self, point):
+        super().__init__()
         self.setupUi(self)
+        self.point = point
+        self.populate()
+
+    def populate(self):
+        lat = self.point.y()
+        lon = self.point.x()
+
+        # Decimal Degrees
+        self.decimalLabel.setText(f"{lat:.6f}, {lon:.6f}")
+
+        # DMS
+        self.dmsLabel.setText(
+            f"{self.to_dms(lat)}, {self.to_dms(lon)}"
+        )
+
+        # UTM
+        zone = int((lon + 180) / 6) + 1
+        utm_crs = QgsCoordinateReferenceSystem()
+        utm_crs.createFromProj(
+            f"+proj=utm +zone={zone} +datum=WGS84 +units=m +no_defs"
+        )
+
+        utm_transform = QgsCoordinateTransform(
+            QgsCoordinateReferenceSystem("EPSG:4326"),
+            utm_crs,
+            QgsProject.instance()
+        )
+
+        utm_point = utm_transform.transform(self.point)
+
+        self.utmLabel.setText(
+            f"Zone {zone} | E: {utm_point.x():.2f}, N: {utm_point.y():.2f}"
+        )
+
+        # MGRS (placeholder – upgrade later)
+        self.mgrsLabel.setText(
+            f"{lat:.5f}, {lon:.5f} (WGS84)"
+        )
+
+    def to_dms(self, value):
+        deg = int(value)
+        minutes_full = abs(value - deg) * 60
+        minutes = int(minutes_full)
+        seconds = (minutes_full - minutes) * 60
+        return f"{deg}° {minutes}' {seconds:.2f}\""
