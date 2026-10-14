@@ -1,47 +1,23 @@
-# This file contains metadata for your plugin.
-
-# This file should be included when you package your plugin.# Mandatory items:
-
 [general]
 name=Coordinate Formatter
 qgisMinimumVersion=3.28
-description=Click on map to display coordinates in decimal, DMS , UTM, and MGRS
-version=1.0
-author=Adam Mackintosh
+description=Click the map to read coordinates in decimal degrees, DMS, UTM and MGRS.
+version=1.0.0
+author=Nathan Mackintosh
 email=nambusiness05@gmail.com
 
-about=Click on map to display coordinates in decimal, DMS , UTM, and MGRS
+about=Pick any point on the map canvas and a dock panel shows it as WGS84 decimal degrees, degrees-minutes-seconds, UTM and MGRS (1 m precision), each with a one-click copy button. Works with any project CRS and needs no extra Python packages.
 
-tracker=http://bugs
-repository=http://repo
-# End of mandatory metadata
+tracker=https://github.com/ServitorXur/Location-data-QGIS-Plugin/issues
+repository=https://github.com/ServitorXur/Location-data-QGIS-Plugin
+homepage=https://github.com/ServitorXur/Location-data-QGIS-Plugin
 
-# Recommended items:
+changelog=1.0.0 - First release: dock panel, copy buttons, map marker, UTM and MGRS.
 
-hasProcessingProvider=no
-# Uncomment the following line and add your changelog:
-# changelog=
-
-# Tags are comma separated with spaces allowed
-tags=python
-
-homepage=http://homepage
+tags=coordinates,wgs84,dms,utm,mgrs,conversion,clipboard
 category=Plugins
-icon=icon.png
-# experimental flag
+icon=icon.svg
 experimental=False
-
-# deprecated flag (applies to the whole plugin, not just a single version)
 deprecated=False
-
-# Since QGIS 3.8, a comma separated list of plugins to be installed
-# (or upgraded) can be specified.
-# Check the documentation for more information.
-# plugin_dependencies=
-
-Category of the plugin: Raster, Vector, Database or Web
-# category= GIS , Coordinates
-
-# If the plugin can run on QGIS Server.
 server=False
-
+hasProcessingProvider=no
